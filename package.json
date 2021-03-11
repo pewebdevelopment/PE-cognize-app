@@ -1,0 +1,22 @@
+{
+  "name": "pe-cognize-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pewebdevelopment/PE-cognize-app.git"
+  },
+  "author": "paathshala",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pewebdevelopment/PE-cognize-app/issues"
+  },
+  "homepage": "https://github.com/pewebdevelopment/PE-cognize-app#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
