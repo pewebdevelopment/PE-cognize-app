@@ -1,0 +1,181 @@
+//add a vacancy
+mutation{
+  addVacancy(vacancyPost:"Rdev",noOfOpenings:2,stipend:1000,perks:["letter"],duration:10,aboutPost:"ste",skillsRequired:["lkmk","lml,"],status:true,rounds:[["sra","lklk"],["lknjn","fdfd"]],deadlineDate:"22/01/2021",startDate:"1/1/2021")
+}
+//update vacancy
+mutation{
+  vacancyUpdate(vacancyId:"5ff5eba3d071b439c8dfc8b2",vacancyPost:"web dev",noOfOpenings:10,stipend:1000,perks:["letter","certificate"],duration:3,startingDate:10000,aboutPost:"dd",skillsRequired:["sd","dd"],whoCanApply:[",,,","kmm"],status:false,assessment:["set","dfe"]){
+    vacancyPost
+  }
+}
+
+//vacancy delete
+mutation{
+  vacancyDelete(vacancyId:"5ff719d84a6ae90228e28230"){
+    vacancyPost
+  }
+}
+//get All vacancies
+query{
+  vacancies{
+    vacancyPost
+  }
+}
+
+//get single Vacancy
+query{
+  vacancy(vacancyId:"5ff5eba3d071b439c8dfc8b2"){
+    whoCanApply
+  }
+}
+//query single candidate
+query{
+  candidate(candidateId:"5ff54bcaea1bad58c8cfb116"){
+		phoneNo
+  }
+}
+//query multiple candidate
+query{
+  candidates{
+		phoneNo
+  }
+}
+
+
+//addCandidate
+mutation{
+  addCandidate(candidateName:"stephen",email:"ste@gmail.com",phoneNo:"9999966666",address:"new"){
+    candidateName
+  }
+}
+//candidate update
+mutation{
+  updateCandidate(candidateId:"5ff54bcaea1bad58c8cfb116",candidateName:"stephenraj",email:"ste",phoneNo:"994499559955",address:"dfdf"){
+    candidateName
+  }
+}
+//candidate deletion
+mutation{
+  deleteCandidate(candidateId:"5ff71dd44a6ae90228e28231"){
+    candidateName
+  }
+}
+//addJob
+mutation{
+  addJob(candidateId:"5ff54bcaea1bad58c8cfb116",profile:"ste",organization:"ss",location:"gg",startingDate:1,endingDate:3,description:"ss",isWFH:true) {
+    jobProfile
+  }
+}
+//deleteJob
+mutation{
+  deleteJob(candidateId:"5ff54bcaea1bad58c8cfb116",profile:"st,e") {
+    pgCollege
+ 
+  } 
+}
+//addInternship
+mutation{
+  addInternship(candidateId:"5ff54bcaea1bad58c8cfb116",profile:"st,e",organization:"ss",location:"gg",startingDate:1,endingDate:3,description:"ss",isWFH:true) {
+    jobProfile
+  }
+}
+//deleteInternship
+mutation{
+  deleteInternship(candidateId:"5ff54bcaea1bad58c8cfb116",profile:"st,e") {
+    pgCollege
+ 
+  } 
+}
+//addProject
+mutation{
+  addProject(candidateId:"5ff54bcaea1bad58c8cfb116",title:"new",startingDate:1,endingDate:2,description:"new",link:"ddd"){
+    projectTitle
+  }
+}
+//deleteProject
+mutation{
+  deleteProject(candidateId:"5ff54bcaea1bad58c8cfb116",title:"new"){
+    projectLink
+  }
+}
+//addSkill
+mutation{
+  addSkill(candidateId:"5ff54bcaea1bad58c8cfb116",skill:"python",level:"intermediate"){
+    projectLink
+  }
+}
+//deleteSkill
+mutation{
+  deleteSkill(candidateId:"5ff54bcaea1bad58c8cfb116",skill:"python"){
+    projectLink
+  }
+}
+//addSslc
+mutation{
+  addSslc(candidateId:"5ff54bcaea1bad58c8cfb116",school:"d",board:"frfr",from:10,to:10,percentage:20){
+    projectLink
+  }
+}
+//addHse
+mutation{
+  addHse(candidateId:"5ff54bcaea1bad58c8cfb116",school:"d",board:"frfr",specialization:"CSE",from:80,to:10,percentage:20){
+    projectLink
+  }
+}
+//addUg
+mutation{
+  addUg(candidateId:"5ff54bcaea1bad58c8cfb116",college:"d",specialization:"CSE",from:80,to:10,percentage:20.2){
+    projectLink
+  }
+}
+//addPg
+mutation{
+  addPg(candidateId:"5ff54bcaea1bad58c8cfb116",college:"dd",specialization:"CSE",from:80,to:20,percentage:20.2){
+    projectLink
+  }
+}
+
+//addResponse
+mutation{
+  addResponse(vacancyId:"5ffaf9babeafa10011497b94",candidateId:"5ffb02dfbeafa10011497b95",githubId:"new",projectsLinks:["ste","ste2"]){
+    githubId
+  }
+}
+//updateResponse
+mutation{
+  responseUpdate(responseId:"5ffc8d16cca75b1b94ca32ef",githubId:"new",projectsLinks:["steuu","ste2"]){
+    githubId
+  }
+}
+//delete response
+mutation{
+  responseDelete(ResponseId:"5ffb4a87ca89d40011bac29a"){
+    githubId
+  }
+}
+//A single response
+mutation{
+  response(responseId:"5ff604d76da2b667246063c6"){
+  	githubId
+	}
+}
+//all responses
+query{
+  responses{
+  	githubId
+	}
+}
+
+//get all candidates response
+mutation{
+  candidateResponses(candidateId:"5ffaafa8d978022ca01c277d"){
+    vacancyPost
+  }
+}
+//get all responses for vacancies
+mutation{
+  vacancyResponses(vacancyId:"5ffaf9babeafa10011497b94"){
+    vacancyPost
+    candidateName
+  }
+}
