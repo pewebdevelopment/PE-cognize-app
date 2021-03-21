@@ -1,4 +1,7 @@
-const user = require('../models/user');
+const student = require('../models/student');
+const admin = require('../models/admin');
+const superAdmin = require('../models/superAdmin');
+
 const verifyToken = require("../verifyToken");
 const config=require('../config/env');
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
@@ -69,13 +72,23 @@ const RootMutationType = new GraphQLObjectType({
     description: 'Root Mutation',
     fields: () => ({
       
-      signUp: {
+      studentSignUp: {
         type:GraphQLString,
-        description: 'Signup',
+        description: 'student signup',
         args: {
           email: { type: GraphQLNonNull(GraphQLString )},
           password:{type: GraphQLNonNull(GraphQLString )},
-          userName:{type: GraphQLNonNull(GraphQLString )},
+          firstName:{type: GraphQLNonNull(GraphQLString )},
+          lastName:{type: GraphQLNonNull(GraphQLString )},
+          grade:{type: GraphQLNonNull(GraphQLString )},
+          phone:{type: GraphQLNonNull(GraphQLInt)},
+
+          parentEmail: { type: GraphQLNonNull(GraphQLString )},
+          parentPassword:{type: GraphQLNonNull(GraphQLString )},
+          parentFirstName:{type: GraphQLNonNull(GraphQLString )},
+          parentLastName:{type: GraphQLNonNull(GraphQLString )},
+          parentPhone:{type: GraphQLNonNull(GraphQLInt)},
+
           permission:{type: GraphQLNonNull(GraphQLString )},
         },
         resolve:async (parent, args) =>{
@@ -93,16 +106,20 @@ const RootMutationType = new GraphQLObjectType({
                 else{
                 try{
                    const passwordHash=await bcrypt.hashSync(args.password,10);
-                   var newUser=new user({  
+                  
+                   var newParentUser=new student({  
                        email:args.email,
                        password:passwordHash,
-                       userName:args.userName,
+                       firstName:args.firstName,
+                       lastName:args.lastName,
+                       grade:args.grade,
+                       phone:args.phone,
                        permission:args.permission
                    })
-                   newUser.userId=newUser._id;
+                   
                    await newUser.save();
-                   console.log('user-created')
-                   resolve('user created');
+                   
+                  
                   
                 }catch(err){
                    console.log(err);
@@ -110,6 +127,39 @@ const RootMutationType = new GraphQLObjectType({
                 cognitoUser = result.user;
                 }
                 })
+
+                var attributeListParent = [];
+                attributeListParent.push(new AmazonCognitoIdentity.CognitoUserAttribute({Name:"email",Value:args.parentEmail}));
+                attributeListParent.push(new AmazonCognitoIdentity.CognitoUserAttribute({Name:"custom:permission",Value:args.permission}));
+                userPool.signUp(args.parentEmail, args.parentPassword, attributeListParent, null,async function(err, result){
+                  if (err) {
+                      console.log(err);
+                      reject(err)
+                  }
+                  else{
+                  try{
+                    const parentPasswordHash=await bcrypt.hashSync(args.parentPassword,10);
+                     var newParentUser=new student({  
+                         parentEmail:args.email,
+                         password:parentPasswordHash,
+                         parentFirstName:args.parentFirstName,
+                         parentLastName:args.parentLastName,
+                         parentPhone:args.parentPhone
+                        
+                     })
+                     
+                     await newParentUser.save();
+                    
+                     
+                    
+                  }catch(err){
+                     console.log(err);
+                  }       
+                  cognitoUser = result.user;
+                  }
+                  })
+
+                  resolve('parent student created');
              }
              else{
                 resolve('Email exists');
@@ -119,6 +169,57 @@ const RootMutationType = new GraphQLObjectType({
         })
       }
     },
+    adminSignUp: {
+      type:GraphQLString,
+      description: 'admin signup',
+      args: {
+        email: { type: GraphQLNonNull(GraphQLString )},
+        password:{type: GraphQLNonNull(GraphQLString )},
+        userName:{type: GraphQLNonNull(GraphQLString )},
+        permission:{type: GraphQLNonNull(GraphQLString )},
+      },
+      resolve:async (parent, args) =>{
+       return new Promise((resolve,reject)=>{
+          admin.findOne({email:args.email},async (err,docs)=>{
+            if(!docs){
+              var attributeList = [];
+              attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({Name:"email",Value:args.email}));
+              attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({Name:"custom:permission",Value:args.permission}));
+              userPool.signUp(args.email, args.password, attributeList, null,async function(err, result){
+              if (err) {
+                  console.log(err);
+                  reject(err)
+              }
+              else{
+              try{
+                 const passwordHash=await bcrypt.hashSync(args.password,10);
+                 var newUser=new user({  
+                     email:args.email,
+                     password:passwordHash,
+                     userName:args.userName,
+                     permission:args.permission
+                 })
+                 
+                 await newUser.save();
+                 console.log('admin-created')
+                 resolve('admin created');
+                
+              }catch(err){
+                 console.log(err);
+              }       
+              cognitoUser = result.user;
+              }
+              })
+           }
+           else{
+              resolve('Email exists');
+           }
+
+          })   
+      })
+    }
+  },
+
     signIn:{
           type:GraphQLList (GraphQLString),
           description:"SignIn",
@@ -138,14 +239,23 @@ const RootMutationType = new GraphQLObjectType({
                 Pool : userPool
             };  
             
-            var st = await user.findOne({email:args.email});
+            var st= await student.findOne({email:args.email});
+            var par = await student.findOne({parent:args.parentEmail});
+            var u;
+
+            if(st){
+              u = st;
+            }else{
+              u = par;
+            }
+
 
             var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
             return new Promise((resolve, reject) => (
                 cognitoUser.authenticateUser(authenticationDetails, {
 
 
-                 onSuccess: (result) => resolve([result.getAccessToken().getJwtToken(),result.getIdToken().getJwtToken(),result.getRefreshToken().getToken(),result.getIdToken().payload['custom:permission'],st.userName]),
+                 onSuccess: (result) => resolve([result.getAccessToken().getJwtToken(),result.getIdToken().getJwtToken(),result.getRefreshToken().getToken(),result.getIdToken().payload['custom:permission'],u.firstName]),
                  onFailure: (err) => resolve([]),
                 })
             ));

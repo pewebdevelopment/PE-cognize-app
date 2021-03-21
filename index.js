@@ -5,7 +5,7 @@ const verifyToken = require("./verifyToken");
 const express = require('express');
 const app = express();
 const mongoconnect = require("./mongoconnect/mongoconnect")
-const user = require('./models/user');
+const user = require('./models/student');
 mongoconnect()
 const schema = require('./graphSchema/schema');
 const cors = require('cors');
