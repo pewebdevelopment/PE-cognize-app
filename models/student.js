@@ -1,7 +1,14 @@
 const mongoose=require('mongoose')
 const studentSchema=mongoose.Schema({
         //student details
-
+        studentId:{
+            type: mongoose.Schema.Types.ObjectId,
+            required:true
+        },
+        userId:{
+            type: mongoose.Schema.Types.ObjectId,
+            required:true
+        },
         firstName:{
             type:String,
             required:true
@@ -14,49 +21,11 @@ const studentSchema=mongoose.Schema({
             type:String,
             required:true
         },
-        email:{
-            type:String,
-            required:true
-        },
-        password:{
-            type:String,
-            required:true
-        },
         phone:{
-            type:Number,
+            type:String,
             required:true
         }, 
 
-        //parent details 
-
-
-        parentFirstName:{
-            type:String,
-            required:true
-        },
-        parentLastName:{
-            type:String,
-            required:true
-        },
-        parentEmail:{
-            type:String,
-            required:true
-        },
-        parentPassword:{
-            type:String,
-            required:true
-        },
-        parentPhone:{
-            type:Number,
-            required:true
-        }, 
-
-
-        //permission shuld be same for them
-        permission:{
-            type:String,
-            required:true
-        },
         
 })
 module.exports =mongoose.model('student', studentSchema);
