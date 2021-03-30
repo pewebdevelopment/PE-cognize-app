@@ -9,29 +9,31 @@ const teacherSchema=mongoose.Schema({
             type:String,
             required:true
         },
-        email:{
-            type:String,
+        userId:{
+            type: mongoose.Schema.Types.ObjectId,
             required:true
         },
-        password:{
-            type:String,
+        teacherId:{
+            type: mongoose.Schema.Types.ObjectId,
             required:true
         },
         phone:{
-            type:Number,
+            type:String,
             required:true
         }, 
         
-        subject:[{
-            levels:{
+        subjects:[{
                 type:String,
                 required:true
-            },
-            exams:[{
-                type:String,
-                required:true
-            }],
         }],
+        levels:[[{
+            type:String,
+            required:true
+        }]],
+        exams:[[{
+            type:String,
+            required:true 
+        }]], 
 
         dob:{
             type:String,
@@ -62,19 +64,14 @@ const teacherSchema=mongoose.Schema({
             required:true
         },
         teachingExperience:{
-            type:Number,
+            type:String,
             required:true
         },
         expectedHourlyRate:{
-            type:Number,
+            type:String,
             required:true
         },
         availability:{
-            type:Number,
-            required:true
-        },
-
-        permission:{
             type:String,
             required:true
         },
