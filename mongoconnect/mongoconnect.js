@@ -7,7 +7,7 @@ mongoconnect = () => {
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            dbName: "PE-COGNIZE"
+            //dbName: "PE-COGNIZE"
         },
         err => {
             if (!err) {

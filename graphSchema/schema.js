@@ -403,7 +403,6 @@ const RootMutationType = new GraphQLObjectType({
         password:{ type: GraphQLNonNull(GraphQLString )},
     },
     resolve:async (parent,args,req)=>{
-      
 
       var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
           Username : args.email,
@@ -413,15 +412,35 @@ const RootMutationType = new GraphQLObjectType({
           Username : args.email,
           Pool : userPool
       };  
+
+      let st = await user.findOne({email:args.email});
+      let name;
+      //console.log("ads",st);
+      let us;
+      if(st.permission == "student"){
+        us = await student.findOne({userId:st.userId});
+        name = us.firstName + ' ' + us.lastName;
+      }else if(st.permission == "admin"){
+        us = await admin.findOne({userId:st.userId});
+        name = us.userName;
+      }else if(st.permission == "parent"){
+        us = await parent.findOne({userId:st.userId});
+        name = us.firstName + ' ' + us.lastName;
+      }else if(st.permission == "teacher"){
+        us = await teacher.findOne({userId:st.userId});
+        name = us.firstName + ' ' + us.lastName;
+      }else{
+        us = await admin.findOne({userId:st.userId});
+        name = us.userName;
+      }
       
-      var st = await user.findOne({email:args.email});
 
       var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
       return new Promise((resolve, reject) => (
           cognitoUser.authenticateUser(authenticationDetails, {
 
 
-           onSuccess: (result) => resolve([result.getAccessToken().getJwtToken(),result.getIdToken().getJwtToken(),result.getRefreshToken().getToken(),result.getIdToken().payload['custom:permission'],st.userName]),
+           onSuccess: (result) => resolve([result.getAccessToken().getJwtToken(),result.getIdToken().getJwtToken(),result.getRefreshToken().getToken(),result.getIdToken().payload['custom:permission'],name]),
            onFailure: (err) => resolve([]),
           })
       ));
