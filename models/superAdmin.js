@@ -1,14 +1,11 @@
 const mongoose=require('mongoose')
-const userSchema=mongoose.Schema({
-    userId:{    
-        type: mongoose.Schema.Types.ObjectId,
-        required:true
-    },
-        userName:{
+const superAdminSchema=mongoose.Schema({
+    ///SHOULD BE HARDCODED
+        email:{
             type:String,
             required:true
         },
-        email:{
+        username:{
             type:String,
             required:true
         },
@@ -16,10 +13,11 @@ const userSchema=mongoose.Schema({
             type:String,
             required:true
         },
+        
         permission:{
             type:String,
             required:true
         },
         
 })
-module.exports =mongoose.model('users', userSchema);
+module.exports =mongoose.model('superAdmin', superAdminSchema);
