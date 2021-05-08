@@ -3,7 +3,7 @@ const student = require('../models/student');
 const admin = require('../models/admin');
 const parentDetails=require('../models/parent');
 const teacher=require('../models/teacher');
-const superAdmin = require('../models/superAdmin');
+
 
 const verifyToken = require("../verifyToken");
 const config=require('../config/env');
@@ -289,7 +289,7 @@ const RootMutationType = new GraphQLObjectType({
                 
                 await newUser.save({},(err,docs)=>{
                   if(docs){
-                   var newParent= new parentDetails({
+                   var newParent= new parent({
                      userId:newUser._id,
                      parentFirstName:args.parentFirstName,
                      parentLastName:args.parentLastName,
@@ -301,7 +301,7 @@ const RootMutationType = new GraphQLObjectType({
                       if(docs){
                        console.log('parent-created')
 
-                       resolve('parent created');
+                       resolve('parent-created');
                       }
                       if(err){
                         console.log(err);
